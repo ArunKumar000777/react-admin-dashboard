@@ -1,11 +1,14 @@
 import "./dataTable.scss";
 import { DataGrid } from "@mui/x-data-grid";
 import { userColomns, userRows } from "../../dataTableSource";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
 
 const DataTable = () => {
     const [data, setData] = useState(userRows);
+    const location = useLocation();
+    const pathName = location.pathname;
+    // console.log(location.pathname);
 
     const handleDelete = (id) => {
         setData(data.filter((item) => item.id !== id));
@@ -17,7 +20,7 @@ const DataTable = () => {
             width: "200",
             renderCell: (params) => {
                 return (
-                    <div className="cellAction">
+                    <div className="cellAction" key={params.row.id}>
                         <Link to={"/users/test"} style={{ textDecoration: "none" }}>
                             <div className="viewButton">View</div>
                         </Link>
@@ -32,8 +35,8 @@ const DataTable = () => {
     return (
         <div className="dataTable">
             <div className="dataTableTitle">
-                Add New User
-                <Link to="/users/new" className="link">
+                {pathName === "/products" ? "Add New Product" : "Add New User"}
+                <Link to={pathName === "/products" ? "/products/new" : "/users/new"} className="link">
                     Add New
                 </Link>
             </div>
@@ -44,6 +47,7 @@ const DataTable = () => {
                 pageSize={9}
                 rowsPerPageOptions={[9]}
                 checkboxSelection
+                key={data.id}
             />
         </div>
     );
